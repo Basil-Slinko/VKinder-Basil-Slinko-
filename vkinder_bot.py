@@ -1,7 +1,3 @@
-# from random import randrange
-# import vk_api
-# from vk_api import VkUpload
-# from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api_functions import lp_obj, write_msg, get_account_info, pair_search, write_msg_with_photos
 from vk_api.longpoll import VkEventType
 # import psycopg2
@@ -94,6 +90,3 @@ def main():
                     write_msg(event.user_id, 'Нажмите, пожалуйста, кнопку "Начать"\n'
                                              '(или отправьте: Начать).')
                     continue
-
-# ОШИБКА №1. При вводе боту названия города:
-# vk_api.exceptions.ApiError: [100] One of the parameters specified was missing or invalid: city not integer
