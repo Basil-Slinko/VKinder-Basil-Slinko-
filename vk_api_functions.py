@@ -1,10 +1,7 @@
-# from pprint import pprint
 from random import randrange
 import requests
 import vk_api
 from vk_api.longpoll import VkLongPoll
-# from vk_api import VkUpload
-# from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 
 
 with open("user_vk_access_token.txt", "r", encoding="UTF-8") as file:
@@ -22,40 +19,19 @@ def write_msg(user_id, message):
 
 
 def write_msg_with_photos(user_id, account_details):
-    # pprint(account_details)
-    """
-    :param account_details: кортеж, где сначала идёт id найденного аккаунта, а вторым -- текст сообщения для отправки
-    :param user_id: id пользователя кому отправляются данные
-    # Ecли на входе нет всех трёх необходимых фотографий, необходимо как-то сделать так, чтобы не было ошибки и
-    # код продолжал дальше работать
-    :return: list с 3-мя фотографиями именно аккаунта (а не из других альбомов пользователя)
-    """
+    
     list_with_three_pictures = returning_photos_account(account_details[0])
-    # print(list_with_three_pictures)
 
     if len(list_with_three_pictures) == 0:
         write_msg(user_id, account_details[1])
     else:
-
         write_msg(user_id, account_details[1])
 
         for id_photo in list_with_three_pictures:
-            # pprint(id_photo)
             session_group.method('messages.send', {'user_id': user_id,
                                                    'random_id': randrange(10 ** 7),
                                                    'attachment': f"photo{account_details[0]}_{id_photo}"})
-
-    # session_group.method('messages.send', {'user_id': user_id,
-    #                                        'message': account_details[1],
-    #                                        'random_id': randrange(10 ** 7),
-    #                                        'attachment': f"photo{account_details[0]}_{list_with_three_pictures[0]}"})
-    # session_group.method('messages.send', {'user_id': user_id,
-    #                                        'random_id': randrange(10 ** 7),
-    #                                        'attachment': f"photo{account_details[0]}_{list_with_three_pictures[1]}"})
-    # session_group.method('messages.send', {'user_id': user_id,
-    #                                        'random_id': randrange(10 ** 7),
-    #                                        'attachment': f"photo{account_details[0]}_{list_with_three_pictures[2]}"})
-
+            
 
 def get_account_info(name_or_id_user):
     """
@@ -153,7 +129,6 @@ def returning_photos_account(vk_id_account):
         return
 
     dict_photo_info = response.json()
-    # pprint(dict_photo_info)
 
     dict_popularity_values_and_ids_photo = dict()
     for photo_info in dict_photo_info['response']['items']:
@@ -161,6 +136,4 @@ def returning_photos_account(vk_id_account):
         popularity_values = photo_info['comments']['count'] + photo_info['likes']['count']
         dict_popularity_values_and_ids_photo[photo_id] = popularity_values
 
-    list_1 = get_photos_three_max_popular_photo(dict_popularity_values_and_ids_photo)
-    # pprint(list_1)
-    return list_1
+    return get_photos_three_max_popular_photo(dict_popularity_values_and_ids_photo)
