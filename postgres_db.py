@@ -1,7 +1,5 @@
 import psycopg2
 from pprint import pprint
-# from psycopg2 import Error
-# from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
 def database_connection():
@@ -32,20 +30,6 @@ def creating_tables_postgres_db():
                  user_vk_id INTEGER NOT NULL REFERENCES user_vk(id),
                  pair_for_user_id INTEGER NOT NULL REFERENCES pair_for_vk_user(id));
                  ''')
-    # cur.execute('''CREATE TABLE user_vk
-    #              (id SERIAL PRIMARY KEY,
-    #              vk_id INTEGER NOT NULL);
-    #
-    #              CREATE TABLE pair_for_vk_user
-    #              (id SERIAL PRIMARY KEY,
-    #              vk_id INTEGER NOT NULL,
-    #              name_and_link_account VARCHAR(100) NOT NULL);
-    #
-    #              CREATE TABLE user_vk_and_pair
-    #              (id SERIAL PRIMARY KEY,
-    #              user_vk_id INTEGER NOT NULL REFERENCES user_vk(id),
-    #              pair_for_user_id INTEGER NOT NULL REFERENCES pair_for_vk_user(id));
-    #              ''')
     print("Table created successfully")
     connect_to_db.commit()
     connect_to_db.close()
@@ -107,8 +91,5 @@ def get_id_column_pair_for_vk_user(pair_account_id):
 
 
 if __name__ == "__main__":
-#     creating_tables_postgres_db()
-    # pprint(get_id_column_user_vk_id(64913149))
-    pprint(get_id_column_pair_for_vk_user(190313594))
-    pprint(get_id_column_pair_for_vk_user(280678839))
-
+    creating_tables_postgres_db()
+   
