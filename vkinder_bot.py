@@ -77,7 +77,7 @@ def main():
 
                     user_account_info = get_user_data(event.user_id)
                     dict_id = pair_search(user_account_info[0])
-                    pprint(dict_id)
+                    
                     tuple_data_account = returning_data_account(dict_id).__next__()
 
                     write_msg_with_photos(event.user_id, tuple_data_account)
