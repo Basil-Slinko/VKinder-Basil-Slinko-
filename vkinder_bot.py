@@ -1,6 +1,6 @@
 from vk_api_functions import lp_obj, write_msg, get_account_info, pair_search, write_msg_with_photos
 from vk_api.longpoll import VkEventType
-# import psycopg2
+from postgres_db import add_to_database_user_vk, add_to_database_pair_for_vk_user, add_to_database_user_vk_and_pair
 
 
 def returning_data_account(dict_id):
@@ -14,6 +14,10 @@ def get_user_data(event):
         if answer.type == VkEventType.MESSAGE_NEW:
             if answer.to_me:
                 pair_seeker_id = answer.text
+                print(pair_seeker_id)
+
+                add_to_database_user_vk(pair_seeker_id)
+
                 user_account_info = get_account_info(pair_seeker_id)
 
                 if not user_account_info['birth_year']:
@@ -58,8 +62,8 @@ def get_user_data(event):
                             if answer_relation.to_me:
                                 user_account_info['relation'] = answer_relation.text
                                 break
-
-                    return user_account_info
+                    print(user_account_info)
+                    return [user_account_info, pair_seeker_id]
 
 
 def main():
@@ -72,10 +76,14 @@ def main():
                                              "его id в ВК (для которого мы ищем пару).")
 
                     user_account_info = get_user_data(event.user_id)
-                    dict_id = pair_search(user_account_info)
+                    dict_id = pair_search(user_account_info[0])
+                    pprint(dict_id)
                     tuple_data_account = returning_data_account(dict_id).__next__()
 
                     write_msg_with_photos(event.user_id, tuple_data_account)
+
+                    add_to_database_pair_for_vk_user(tuple_data_account[0])
+                    add_to_database_user_vk_and_pair(user_account_info[1], tuple_data_account[0])
 
                     write_msg(event.user_id, f'\nОтправьте, пожалуйста, слово "Next"'
                                              f'для просмотра следующего аккаунта')
@@ -85,8 +93,14 @@ def main():
                                 request = message_next_account.text
                                 if request == "Next" or "next" or "NEXT":
                                     next_account_details = returning_data_account(dict_id).__next__()
+                                    print(f"next_account_details{next_account_details}")
                                     write_msg_with_photos(event.user_id, next_account_details)
+
+                                    add_to_database_pair_for_vk_user(tuple_data_account[0])
+                                    add_to_database_user_vk_and_pair(user_account_info[1], next_account_details[0])
+
                 else:
                     write_msg(event.user_id, 'Нажмите, пожалуйста, кнопку "Начать"\n'
                                              '(или отправьте: Начать).')
                     continue
+   
